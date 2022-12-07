@@ -20,7 +20,7 @@ aws ec2 authorize-security-group-ingress --group-id ${SGPUBLIC} --protocol "tcp"
 aws ec2 authorize-security-group-ingress --group-id ${SGPRIVATE} --protocol "tcp" --port "22" --source-group ${SGPUBLIC}
 aws ec2 authorize-security-group-ingress --group-id ${SGPRIVATE} --protocol "tcp" --port "22" --source-group ${SGPUBLIC}
 
-echo "VPCID : ${VPCID}" > ${Projet}.txt
+echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/deployed/${PROJECT_NAME}.txt
 echo "SUBNET_PUBLIC : ${SUBNET_PUBLIC}"
 echo "SUBNET_PRIVATE : ${SUBNET_PRIVATE}"
 echo "IGW : ${IGW}"
