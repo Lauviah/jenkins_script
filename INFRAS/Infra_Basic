@@ -11,6 +11,8 @@ aws ec2 associate-route-table --route-table-id ${ROUTETABLEPUBLIC} --subnet-id $
 IPALLOC=$(aws ec2 allocate-address | grep '"AllocationId":' | cut -d'"' -f4)
 SGPUBLIC=$(aws ec2 create-security-group --vpc-id ${VPCID} --description "SG-PUBLIC" --group-name "SG-PUBLIC" | grep '"GroupId":' | cut -d'"' -f4)
 aws ec2 authorize-security-group-ingress --group-id ${SGPUBLIC} --protocol "tcp" --port "22" --cidr "0.0.0.0/0"
+INSTANCEID=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGBPUBLIC} --subnet-id ${SUBNET_PUBLIC} | grep 'InstanceID:' | cut -d'"' -f4)
+INSTANCEIP=$(aws ec2 describe-instances --instance-id ${INSTANCEID} --query | grep '"Address":' | cut -d'"' -f4)
 
 echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/deployed/${PROJECT_NAME}.txt
 echo "SUBNET_PUBLIC : ${SUBNET_PUBLIC}"
@@ -19,4 +21,5 @@ echo "ROUTE TABLE : ${ROUTETABLEPUBLIC}"
 echo "IP ALLOC : ${IPALLOC}"
 echo "NGW : ${NGW}"
 echo "SECURITY GROUP PUBLIC : ${SGPUBLIC}"
-
+echo "INSTANCE ID : ${INSTANCEID}"
+echo "INSTANCE IP : ${INSTANCEIP}"
