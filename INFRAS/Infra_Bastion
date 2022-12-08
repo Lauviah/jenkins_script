@@ -15,14 +15,14 @@ sleep 10
 ROUTETABLEPRIVEE=$(aws ec2 create-route-table --vpc-id ${VPCID} | grep '"RouteTableId":' | cut -d'"' -f4)
 aws ec2 create-route --route-table-id ${ROUTETABLEPRIVEE} --destination-cidr-block "0.0.0.0/0" --nat-gateway-id ${NGW}
 aws ec2 associate-route-table --route-table-id ${ROUTETABLEPRIVEE} --subnet-id ${SUBNET_PRIVATE}
-SGPUBLIC=$(aws ec2 create-security-group --vpc-id ${VPCID} --description "SG-PUBLIC" --group-name "SG-PUBLIC" | grep '"GroupId":' |uniq | cut -d'"' -f4)
-SGPRIVATE=$(aws ec2 create-security-group --vpc-id ${VPCID} --description "SG-PRIVATE" --group-name "SG-PRIVATE" | grep '"GroupId":' | uniq | cut -d'"' -f4)
+SGPUBLIC=$(aws ec2 create-security-group --vpc-id ${VPCID} --description "SG-PUBLIC" --group-name "SG-PUBLIC" | grep '"GroupId":' | cut -d'"' -f4)
+SGPRIVATE=$(aws ec2 create-security-group --vpc-id ${VPCID} --description "SG-PRIVATE" --group-name "SG-PRIVATE" | grep '"GroupId":' | cut -d'"' -f4)
 aws ec2 authorize-security-group-ingress --group-id ${SGPUBLIC} --protocol "tcp" --port "22" --cidr "0.0.0.0/0"
 aws ec2 authorize-security-group-ingress --group-id ${SGPRIVATE} --protocol "tcp" --port "22" --source-group ${SGPUBLIC}
 INSTANCEIDPUBLIC=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPUBLIC} --subnet-id ${SUBNET_PUBLIC} | grep '"InstanceId":' | cut -d'"' -f4)
-INSTANCEIPPUBLIC=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPUBLIC} | grep '"PublicIp":' | uniq |cut -d'"' -f4)
+INSTANCEIPPUBLIC=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPUBLIC} | grep '"PublicIp":' | sort | uniq | cut -d'"' -f4)
 INSTANCEIDPRIVATE=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPRIVATE} --subnet-id ${SUBNET_PRIVATE} | grep '"InstanceId":' | cut -d'"' -f4)
-INSTANCEIPPRIVATE=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPRIVATE} | grep '"PrivateIpAddress":'| uniq | cut -d'"' -f4)
+INSTANCEIPPRIVATE=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPRIVATE} | grep '"PrivateIpAddress":'| sort | uniq | cut -d'"' -f4)
 
 echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/deployed/${PROJECT_NAME}.txt
 echo "SUBNET_PUBLIC : ${SUBNET_PUBLIC}"
