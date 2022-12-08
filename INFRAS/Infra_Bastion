@@ -20,7 +20,7 @@ SGPRIVATE=$(aws ec2 create-security-group --vpc-id ${VPCID} --description "SG-PR
 aws ec2 authorize-security-group-ingress --group-id ${SGPUBLIC} --protocol "tcp" --port "22" --cidr "0.0.0.0/0"
 aws ec2 authorize-security-group-ingress --group-id ${SGPRIVATE} --protocol "tcp" --port "22" --source-group ${SGPUBLIC}
 INSTANCEIDPUBLIC=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPUBLIC} --subnet-id ${SUBNET_PUBLIC} | grep '"InstanceId":' | cut -d'"' -f4)
-INSTANCEIPPUBLIC=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPUBLIC} --query | grep '"PublicIp":' | cut -d'"' -f4)
+INSTANCEIPPUBLIC=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPUBLIC} | grep '"PublicIp":' | cut -d'"' -f4)
 INSTANCEIDPRIVATE=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPRIVATE} --subnet-id ${SUBNET_PRIVATE} | grep '"InstanceId":' | cut -d'"' -f4)
 INSTANCEIPPRIVATE=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPRIVATE} | grep '"PrivateIpAddress":' | cut -d'"' -f4)
 
