@@ -24,7 +24,7 @@ INSTANCEIPPUBLIC=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPUBLIC}
 INSTANCEIDPRIVATE=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPRIVATE} --subnet-id ${SUBNET_PRIVATE} | grep '"InstanceId":' | cut -d'"' -f4)
 INSTANCEIPPRIVATE=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPRIVATE} | grep '"PrivateIpAddress":' | cut -d'"' -f4 | uniq)
 
-echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/deployed/${PROJECT_NAME}.txt
+echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/jenkins_script/deployed/${PROJECT_NAME}.txt
 echo "SUBNET_PUBLIC : ${SUBNET_PUBLIC}"
 echo "SUBNET_PRIVATE : ${SUBNET_PRIVATE}"
 echo "IGW : ${IGW}"

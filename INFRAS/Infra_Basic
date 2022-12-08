@@ -14,7 +14,7 @@ aws ec2 authorize-security-group-ingress --group-id ${SGPUBLIC} --protocol "tcp"
 INSTANCEID=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGBPUBLIC} --subnet-id ${SUBNET_PUBLIC} | grep '"InstanceId":' | cut -d'"' -f4)
 INSTANCEIP=$(aws ec2 describe-instances --instance-ids ${INSTANCEID} | grep '"PublicIp":'| cut -d'"' -f4| uniq)
 
-echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/deployed/${PROJECT_NAME}.txt
+echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/jenkins_script/deployed/${PROJECT_NAME}.txt
 echo "SUBNET_PUBLIC : ${SUBNET_PUBLIC}"
 echo "IGW : ${IGW}"
 echo "ROUTE TABLE : ${ROUTETABLEPUBLIC}"
