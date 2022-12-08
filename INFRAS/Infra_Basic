@@ -24,6 +24,8 @@ echo "SECURITY GROUP PUBLIC : ${SGPUBLIC}"
 echo "INSTANCE ID : ${INSTANCEID}"
 echo "INSTANCE IP : ${INSTANCEIP}"
 
+python3 -m pip install --user ansible
+
 ansible all -a "sudo yum install -y httpd" -i ${INSTANCEIP},
 ansible all -a "sudo systemctl start httpd" -i ${INSTANCEIP},
 ansible all -a "curl localhost" -i ${INSTANCEIP},
