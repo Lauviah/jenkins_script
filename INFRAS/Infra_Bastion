@@ -11,6 +11,7 @@ ROUTETABLEPUBLIC=$(aws ec2 create-route-table --vpc-id ${VPCID} | grep '"RouteTa
 aws ec2 associate-route-table --route-table-id ${ROUTETABLEPUBLIC} --subnet-id ${SUBNET_PUBLIC}
 IPALLOC=$(aws ec2 allocate-address | grep '"AllocationId":' | cut -d'"' -f4)
 NGW=$(aws ec2 create-nat-gateway --allocation-id ${IPALLOC} --subnet-id ${SUBNET_PUBLIC} | grep '"NatGatewayId":' | cut -d'"' -f4)
+sleep 10
 ROUTETABLEPRIVEE=$(aws ec2 create-route-table --vpc-id ${VPCID} | grep '"RouteTableId":' | cut -d'"' -f4)
 aws ec2 create-route --route-table-id ${ROUTETABLEPRIVEE} --destination-cidr-block "0.0.0.0/0" --nat-gateway-id ${NGW}
 aws ec2 associate-route-table --route-table-id ${ROUTETABLEPRIVEE} --subnet-id ${SUBNET_PRIVATE}
@@ -19,9 +20,9 @@ SGPRIVATE=$(aws ec2 create-security-group --vpc-id ${VPCID} --description "SG-PR
 aws ec2 authorize-security-group-ingress --group-id ${SGPUBLIC} --protocol "tcp" --port "22" --cidr "0.0.0.0/0"
 aws ec2 authorize-security-group-ingress --group-id ${SGPRIVATE} --protocol "tcp" --port "22" --source-group ${SGPUBLIC}
 aws ec2 authorize-security-group-ingress --group-id ${SGPRIVATE} --protocol "tcp" --port "22" --source-group ${SGPUBLIC}
-INSTANCEIDPUBLIC=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPUBLIC} --subnet-id ${SUBNET_PUBLIC} | grep 'InstanceID:' | cut -d'"' -f4)
+INSTANCEIDPUBLIC=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPUBLIC} --subnet-id ${SUBNET_PUBLIC} | grep '"InstanceID":' | cut -d'"' -f4)
 INSTANCEIPPUBLIC=$(aws ec2 describe-instances --instance-id ${INSTANCEIDPUBLIC} --query | grep '"Address":' | cut -d'"' -f4)
-INSTANCEIDPRIVATE=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPRIVATE} --subnet-id ${SUBNET_PRIVATE} | grep 'InstanceID:' | cut -d'"' -f4)
+INSTANCEIDPRIVATE=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPRIVATE} --subnet-id ${SUBNET_PRIVATE} | grep '"InstanceID":' | cut -d'"' -f4)
 INSTANCEIPPRIVATE=$(aws ec2 describe-instances --instance-id ${INSTANCEIDPRIVATE} --query | grep '"Address":' | cut -d'"' -f4)
 
 echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/deployed/${PROJECT_NAME}.txt
