@@ -24,11 +24,15 @@ echo "SECURITY GROUP PUBLIC : ${SGPUBLIC}"
 echo "INSTANCE ID : ${INSTANCEID}"
 echo "INSTANCE IP : ${INSTANCEIP}"
 
+sleep 20
+
+sudo yum update -y
 python3 -m pip install --user ansible
 
 ansible all -a "sudo yum install -y httpd" -i ${INSTANCEIP},
-ansible all -a "sudo systemctl start httpd" -i ${INSTANCEIP},
+ansible all -a "sudo systemctl enable --now httpd" -i ${INSTANCEIP},
 ansible all -a "curl localhost" -i ${INSTANCEIP},
+ansible all -a "sudo /bin/bash -c 'cat /etc/hostname > /var/www/html/index.html'"
 ansible all-a "sudo yum install -y git" -i ${INSTANCEIP},
 
 exit
