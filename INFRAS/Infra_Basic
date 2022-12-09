@@ -30,10 +30,10 @@ echo "INSTANCE IP : ${INSTANCEIP}"
 sleep 50
 
 
-ansible all -a "sudo apt install -y httpd" -u ubuntu -i ${INSTANCEIP},
-ansible all -a "sudo systemctl enable --now httpd" -u ubuntu -i ${INSTANCEIP},
-ansible all -a "curl localhost" -u ubuntu -i ${INSTANCEIP},
-ansible all -a "sudo /bin/bash -c 'cat /etc/hostname > /var/www/html/index.html'" -u ubuntu -i ${INSTANCEIP},
-ansible all -a "sudo yum install -y git" -u ubuntu -i ${INSTANCEIP},
+ansible all -a "sudo apt install -y httpd" -u ubuntu -i ${INSTANCEIP} --private-key taty_key.pem,
+ansible all -a "sudo systemctl enable --now httpd" -u ubuntu -i ${INSTANCEIP} --private-key taty_key.pem,,
+ansible all -a "curl localhost" -u ubuntu -i ${INSTANCEIP} --private-key taty_key.pem,,
+ansible all -a "sudo /bin/bash -c 'cat /etc/hostname > /var/www/html/index.html'" -u ubuntu -i ${INSTANCEIP} --private-key taty_key.pem,,
+ansible all -a "sudo yum install -y git" -u ubuntu -i ${INSTANCEIP} --private-key taty_key.pem,,
 
 exit
