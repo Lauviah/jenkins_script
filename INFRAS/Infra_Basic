@@ -1,6 +1,7 @@
 #!/bin/bash
 
 export PATH=$PATH:~/.local/bin
+export ANSIBLE_HOST_KEY_CHECKING=false
 
 VPCID=$(aws ec2 create-vpc --cidr-block "10.0.0.0/16" | grep '"VpcId":' | cut -d'"' -f4)
 SUBNET_PUBLIC=$(aws ec2 create-subnet --cidr-block "10.0.0.0/24" --vpc-id ${VPCID} | grep '"SubnetId":' | cut -d'"' -f4)
@@ -28,8 +29,7 @@ echo "INSTANCE ID : ${INSTANCEID}"
 echo "INSTANCE IP : ${INSTANCEIP}"
 
 sleep 50
-
-
+snsible all -a "sudo apt-get update" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 ansible all -a "sudo apt install -y httpd" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 ansible all -a "sudo systemctl enable --now httpd" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 ansible all -a "curl localhost" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
