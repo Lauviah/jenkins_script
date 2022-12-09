@@ -29,7 +29,7 @@ echo "INSTANCE ID : ${INSTANCEID}"
 echo "INSTANCE IP : ${INSTANCEIP}"
 
 sleep 50
-snsible all -a "sudo apt-get update" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
+ansible all -a "sudo apt-get update" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 ansible all -a "sudo apt install -y httpd" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 ansible all -a "sudo systemctl enable --now httpd" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 ansible all -a "curl localhost" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
