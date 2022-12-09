@@ -26,8 +26,9 @@ echo "INSTANCE IP : ${INSTANCEIP}"
 
 sleep 20
 
+
+sudo su - jenkins -s /bin/bash
 sudo apt-get update -y
-sudo su - jenkins
 python3 -m pip install --user ansible
 
 ansible all -a "sudo apt install -y httpd" -i ${INSTANCEIP},
