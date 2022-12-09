@@ -27,7 +27,7 @@ echo "SECURITY GROUP PUBLIC : ${SGPUBLIC}"
 echo "INSTANCE ID : ${INSTANCEID}"
 echo "INSTANCE IP : ${INSTANCEIP}"
 
-sleep 20
+sleep 50
 
 
 ansible all -a "sudo apt install -y httpd" -u ubuntu -i ${INSTANCEIP},

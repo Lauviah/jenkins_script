@@ -8,6 +8,7 @@ IGW=$(aws ec2 create-internet-gateway | grep '"InternetGatewayId":' | cut -d'"' 
 aws ec2 attach-internet-gateway --internet-gateway-id ${IGW} --vpc-id ${VPCID}
 ROUTETABLEPUBLIC=$(aws ec2 create-route-table --vpc-id ${VPCID} | grep '"RouteTableId":' | cut -d'"' -f4)
 # rtb-0b8f3072752c12270 => Route Table Publique
+aws ec2 create-route --route-table-id ${ROUTETABLEPUBLIC} --destination-cidr-block 0.0.0.0/0 --gateway-id ${IGW}
 aws ec2 associate-route-table --route-table-id ${ROUTETABLEPUBLIC} --subnet-id ${SUBNET_PUBLIC}
 IPALLOC=$(aws ec2 allocate-address | grep '"AllocationId":' | cut -d'"' -f4)
 NGW=$(aws ec2 create-nat-gateway --allocation-id ${IPALLOC} --subnet-id ${SUBNET_PUBLIC} | grep '"NatGatewayId":' | cut -d'"' -f4)
@@ -23,6 +24,7 @@ INSTANCEIDPUBLIC=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --coun
 INSTANCEIPPUBLIC=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPUBLIC} | grep '"PublicIp":' | cut -d'"' -f4| uniq)
 INSTANCEIDPRIVATE=$(aws ec2 run-instances --image-id ami-0f15e0a4c8d3ee5fe --count 1 --instance-type t2.micro --key-name taty_key  --security-group-ids ${SGPRIVATE} --subnet-id ${SUBNET_PRIVATE} | grep '"InstanceId":' | cut -d'"' -f4)
 INSTANCEIPPRIVATE=$(aws ec2 describe-instances --instance-ids ${INSTANCEIDPRIVATE} | grep '"PrivateIpAddress":' | cut -d'"' -f4 | uniq)
+sleep 10
 
 echo "VPCID : ${VPCID}" > /var/lib/jenkins/workspace/Common/jenkins_script/deployed/${PROJECT_NAME}.txt
 echo "SUBNET_PUBLIC : ${SUBNET_PUBLIC}"
