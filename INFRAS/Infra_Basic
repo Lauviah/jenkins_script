@@ -9,6 +9,7 @@ IGW=$(aws ec2 create-internet-gateway | grep '"InternetGatewayId":' | cut -d'"' 
 aws ec2 attach-internet-gateway --internet-gateway-id ${IGW} --vpc-id ${VPCID}
 ROUTETABLEPUBLIC=$(aws ec2 create-route-table --vpc-id ${VPCID} | grep '"RouteTableId":' | cut -d'"' -f4)
 # rtb-0b8f3072752c12270 => Route Table Publique
+aws ec2 create-route --route-table-id ${ROUTETABLEPUBLIC} --destination-cidr-block 0.0.0.0/0 --gateway-id ${IGW}
 aws ec2 associate-route-table --route-table-id ${ROUTETABLEPUBLIC} --subnet-id ${SUBNET_PUBLIC}
 IPALLOC=$(aws ec2 allocate-address | grep '"AllocationId":' | cut -d'"' -f4)
 SGPUBLIC=$(aws ec2 create-security-group --vpc-id ${VPCID} --description "SG-PUBLIC" --group-name "SG-PUBLIC" | grep '"GroupId":' | cut -d'"' -f4)
