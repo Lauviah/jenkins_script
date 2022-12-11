@@ -35,7 +35,7 @@ sleep 50
 ansible all -a "sudo dpkg -i puppet6-release-focal.deb -y" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 ansible all -a "sudo wget https://apt.puppetlabs.com/puppet6-release-focal.deb -y" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 ansible all -a "sudo apt-get -y update" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
-ansible all -a "sudo apt install puppet-agent -y" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
+#ansible all -a "sudo apt install puppet-agent -y" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 #ansible all -a "sudo vim /etc/puppetlabs/puppet/puppet.conf" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 #ansible all -a "echo -e '[main]\ncertname = puppetclient\nserver = ip-10-0-0-12.eu-west-3.compute.internal' > /etc/puppetlabs/puppet/puppet.conf'" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
 #ansible all -a "echo -e' 10.0.0.12 ip-10-0-0-12.eu-west-3.compute.internal puppet\n\n10.0.0.12 puppetmaster' > /etc/hosts" -u ubuntu -i ${INSTANCEIP}, --private-key /var/lib/jenkins/taty_key.pem
